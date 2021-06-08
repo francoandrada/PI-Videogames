@@ -1,10 +1,12 @@
+const Sequelize = require('sequelize');
 const { Videogame } = require('../db');
-const axios = require('axios');
-const { v4: uuidv4 } = require('uuid');
 const { GAMES_URL, BASE_URL } = require('../../constants');
+const { v4: uuidv4 } = require('uuid');
+const axios = require('axios');
+const Op = Sequelize.Op;
 
 
-
+// Agregar generos
 const getVideogames = async (req, res, next) => {
     //const videogameApi = axios.get(`${BASE_URL}${GAMES_URL}`);
     //function getVideogames( req, res, next) {
@@ -13,8 +15,10 @@ const getVideogames = async (req, res, next) => {
     //     .catch((err) => next(err));
     try {
         const videogames = await Videogame.findAll();
+        let filtrado = videogames.length >= 15 ? videogames.slice(0, 15) : videogames;
         res.json({
-            data: videogames
+            messaje: 'hola',
+            data: filtrado
         })
     } catch (e) {
         next(e)
@@ -22,16 +26,16 @@ const getVideogames = async (req, res, next) => {
 }
 
 const createVideogame = async (req, res, next) => {
-    const { name, description, rating, plataforms } = req.body;
+    const { name, description, rating, platforms } = req.body;
     try {
         let newVideogame = await Videogame.create({
             id: uuidv4(),
             name,
             description,
             rating,
-            plataforms
+            platforms
         }, {
-            fields: ['id', 'name', 'description', 'rating', 'plataforms']
+            fields: ['id', 'name', 'description', 'rating', 'platforms']
         });
 
         if (newVideogame) {
@@ -41,6 +45,7 @@ const createVideogame = async (req, res, next) => {
             });
         }
     } catch (e) {
+        console.log(e)
         res.status(500).json({
             messaje: 'Something goes wrong',
             data: {}
@@ -48,17 +53,19 @@ const createVideogame = async (req, res, next) => {
     }
 }
 
-const getOneVideogame = async (req, res) => {
+// name, description, release_date, rating, platforms
+const getOneVideogame = async (req, res, next) => {
     const { id } = req.params;
     try {
         const videogame = await Videogame.findOne({
+            atributes: [  ],
             where: {
                 id
             }
         });
         if (videogame) {
             return res.json({
-                messaje: 'Videogame created succesfully',
+                messaje: 'Videogame find succesfully',
                 data: videogame
             });
         }
@@ -67,8 +74,35 @@ const getOneVideogame = async (req, res) => {
     }
 }
 
+const videogamesByName = async (req, res, next) => {
+    var nombre = req.query.name;
+
+    try {
+        const videogame = await Videogame.findAll({
+            where: { name: { [Op.iLike]: `%${nombre}%` } }
+        })
+        if (videogame) {
+            let filtrado = videogame.length >= 15 ? videogame.slice(0, 15) : videogame;
+            res.json({
+                messaje: 'Video games found succesfully',
+                data: filtrado
+            });
+        } else {
+            res.sendStatus(404)
+        }
+
+    } catch (e) {
+        // res.status(500).json({
+        //     messaje: 'Something goes wrong',
+        //     data: {}
+        // });
+        //        console.log(e)
+    }
+}
+
 module.exports = {
     getVideogames,
     createVideogame,
-    getOneVideogame
+    getOneVideogame,
+    videogamesByName
 }
