@@ -3,9 +3,9 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const routes = require('./routes/index.js');
-const { Genre } = require('./db')
+const { Genre, Platform } = require('./db')
 const axios = require('axios');
-const { BASE_URL, GENRE_URL } = require('../constants');
+const { BASE_URL, GENRE_URL, PLATFORM_URL } = require('../constants');
 const {
   API_KEY
 } = process.env;
@@ -27,17 +27,30 @@ server.use((req, res, next) => {
   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
   next();
 });
-                                            
+
 (async function cargarDatos() {
-    const { data: { results } } = await axios.get(`${BASE_URL}${GENRE_URL}?key=${API_KEY}`);
-    results.forEach(({ name }) => {
-      Genre.create({
-        name
-      }, {
-        fields: ['name']
-      });
+  const { data: { results } } = await axios.get(`${BASE_URL}${GENRE_URL}?key=${API_KEY}`);
+  results.forEach(({ name }) => {
+    Genre.create({
+      name
+    }, {
+      fields: ['name']
     });
+  });
 })();
+
+(async function getPlatforms() {
+  const { data: { results } } = await axios.get(`${BASE_URL}${PLATFORM_URL}?key=${API_KEY}`);
+  //const platforms = await Promise.all(results.map(({ name }) => (name)));
+  results.forEach(({ name }) => {
+    Platform.create({
+      name
+    }, {
+      fields: ['name']
+    });
+  });
+})();
+
 
 server.use('/', routes);
 

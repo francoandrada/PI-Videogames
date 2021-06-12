@@ -1,14 +1,10 @@
 const Sequelize = require('sequelize');
-const { Videogame, Genre } = require('../db');
+const { Videogame, Genre, Platform } = require('../db');
 const { GAMES_URL, BASE_URL, PLATFORM_URL } = require('../../constants');
 const { API_KEY } = process.env;
 const { v4: uuidv4 } = require('uuid');
 const axios = require('axios');
 const Op = Sequelize.Op;
-
-
-
-
 
 
 // Agregar generos
@@ -57,34 +53,45 @@ const getVideogames = async (req, res, next) => {
 }
 
 const createVideogame = async (req, res, next) => {
-    const { name, description, rating, platforms, genreName } = req.body;
+    const { name, description, rating, genreName, platformName } = req.body;
     const genres = await Genre.findAll({
-        atributes: ['id', 'name']
+        attributes: ['id', 'name']
+    });
+    const platforms = await Platform.findAll({
+        attributes: ['id', 'name']
     });
 
     //var areGenres = genres.filter((genre) => genreName.includes(genre.name));
-
     try {
-        let newVideogame = await Videogame.create({
-            id: uuidv4(),
-            name,
-            description,
-            rating,
-            platforms
-        }, {
-            fields: ['id', 'name', 'description', 'rating', 'platforms']
+        //  let newVideogame = await Videogame.create({
+        //      id: uuidv4(),
+        //      name,
+        //      description,
+        //      rating,
+        //      platforms
+        //  }, {
+        //      fields: ['id', 'name', 'description', 'rating', 'platforms'],
+        //  });
+        var newVideogame = await Videogame.findOrCreate({
+            where: { name: name },
+            defaults: { id: uuidv4(), description: description, rating: rating }
         });
 
-
-        if (newVideogame) {
+        if (!!newVideogame) {
             for (let i = 0; i < genreName.length; i++) {
                 for (let j = 0; j < genres.length; j++) {
                     if (genres[j].name.toLowerCase() === genreName[i].toLowerCase()) {
-                        await newVideogame.addGenre(genres[j].id);
+                        await newVideogame[0].addGenre(genres[j].id);
                     }
                 }
             }
-
+            for (let i = 0; i < platformName.length; i++) {
+                for (let j = 0; j < platforms.length; j++) {
+                    if (platforms[j].name.toLowerCase() === platformName[i].toLowerCase()) {
+                        await newVideogame[0].addPlatform(platforms[j].id);
+                    }
+                }
+            }
             return res.json({
                 messaje: 'Videogame created succesfully',
                 data: newVideogame
@@ -106,17 +113,26 @@ const getOneVideogame = async (req, res, next) => {
     try {
         if (id.includes("-")) {
             const videogameDb = await Videogame.findOne({
-                atributes: ['name', 'description', 'release_date', 'rating', 'platforms'],
+                attributes: ['name', 'description', 'rating', ['createdAt', 'release_date']],
                 where: {
                     id
                 },
-                include: Genre
+                include: [
+                    {
+                        model: Genre,
+                        attributes: ['id', 'name']
+                    },
+                    {
+                        model: Platform,
+                        attributes: ['id', 'name']
+                    }
+                ]
             })
             return res.json({
                 messaje: 'Videogame find succesfully',
                 data: videogameDb
             });
-         } 
+        }
         else {
             var url = `${BASE_URL}${GAMES_URL}/${id}?key=${API_KEY}`;
             let { data } = await axios.get(url);
@@ -128,7 +144,7 @@ const getOneVideogame = async (req, res, next) => {
                 rating: data.rating,
                 background_image: data.background_image,
                 genres: data.genres.map(({ name }) => (name)),
-                platforms: data.platforms.map(({ platform: {name} }) => (name))
+                platforms: data.platforms.map(({ platform: { name } }) => (name))
             }
             return res.json({
                 messaje: 'Videogame find succesfully',
@@ -144,21 +160,60 @@ const getOneVideogame = async (req, res, next) => {
     }
 }
 
+//Cambiar para que busque con minusculas
 const videogamesByName = async (req, res, next) => {
     var nombre = req.query.name;
 
     try {
+        //var url = `${BASE_URL}${GAMES_URL}/${nombre}?key=${API_KEY}`;
+        var resultsApi = [];
+        var url = `${BASE_URL}${GAMES_URL}?key=${API_KEY}`;
+        for (let i = 1; i <= 5; i++) {
+            if (i == 1) {
+                var { data: { results } } = await axios.get(url);
+            } else {
+                var { data: { results } } = await axios.get((url).concat(`&page=${i}`));
+            }
+            await Promise.all(
+                results.map((g) => {
+                    let data = {
+                        id: g.id,
+                        name: g.name,
+                        background_image: g.background_image,
+                        genres: g.genres.map(({ name }) => (name))
+                    }
+                    resultsApi.push(data)
+                })
+            )
+        }
+        //var { data } = await axios.get(url);
+        //var resultsApi = {
+        //    id: data.id,
+        //    name: data.name,
+        //    background_image: data.background_image,
+        //    genres: data.genres.map(({ name }) => (name)),
+        //    }
+        var apiFiltred = resultsApi.filter(game => game.name.includes(nombre))
         const videogame = await Videogame.findAll({
-            where: { name: { [Op.iLike]: `%${nombre}%` } }
+            attributes: ['name', 'description'],
+            where: { name: { [Op.iLike]: `%${nombre}%` } },
+            include: [{
+                model: Genre,
+                attributes: ['name']
+            }]
         })
-        if (videogame) {
+        let videoJoin = [...apiFiltred, ...videogame];
+        if (videoJoin.length >= 1) {
             let filtrado = videogame.length >= 15 ? videogame.slice(0, 15) : videogame;
             res.json({
                 messaje: 'Video games found succesfully',
-                data: filtrado
+                data: videoJoin
             });
         } else {
-            res.sendStatus(404)
+            res.status(404).json({
+                messaje: 'Video games not found ',
+                data: {}
+            });
         }
 
     } catch (e) {
