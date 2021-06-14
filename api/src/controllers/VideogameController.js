@@ -63,15 +63,11 @@ const createVideogame = async (req, res, next) => {
 
     //var areGenres = genres.filter((genre) => genreName.includes(genre.name));
     try {
-        //  let newVideogame = await Videogame.create({
-        //      id: uuidv4(),
-        //      name,
-        //      description,
-        //      rating,
-        //      platforms
-        //  }, {
-        //      fields: ['id', 'name', 'description', 'rating', 'platforms'],
-        //  });
+        if (!name || !description || !rating || !genreName || !platformName ) {
+            return res.status(500).json({
+                messaje: 'Some of the fields are empty'
+            });
+        }
         var newVideogame = await Videogame.findOrCreate({
             where: { name: name },
             defaults: { id: uuidv4(), description: description, rating: rating }
@@ -107,7 +103,6 @@ const createVideogame = async (req, res, next) => {
 }
 
 // name, description, release_date, rating, platforms
-// Como buscar datos de los 100 juegos de la api sin que tarde 8 segundos
 const getOneVideogame = async (req, res, next) => {
     const { id } = req.params;
     try {
@@ -133,7 +128,8 @@ const getOneVideogame = async (req, res, next) => {
                 data: videogameDb
             });
         }
-        else {
+        else if(!id.includes("-") && !!parseInt(id) && id.length < 7) {
+
             var url = `${BASE_URL}${GAMES_URL}/${id}?key=${API_KEY}`;
             let { data } = await axios.get(url);
             const videogameApi = {
@@ -150,6 +146,8 @@ const getOneVideogame = async (req, res, next) => {
                 messaje: 'Videogame find succesfully',
                 data: videogameApi
             });
+        } else{
+            return res.status(500).json({messaje: 'Id not valid'})
         }
     } catch (e) {
         res.status(500).json({
@@ -161,11 +159,18 @@ const getOneVideogame = async (req, res, next) => {
 }
 
 //Cambiar para que busque con minusculas
+// Como buscar datos de los 100 juegos de la api sin que tarde 8 segundos
 const videogamesByName = async (req, res, next) => {
     var nombre = req.query.name;
-
+    
+    // if (!nombre) {
+    //     res.status(500).json({ messaje: "Name not entered"});
+    // }
     try {
-        //var url = `${BASE_URL}${GAMES_URL}/${nombre}?key=${API_KEY}`;
+        if (!nombre) {
+            return res.status(500).json({ messaje: "Name not entered"});
+        }
+
         var resultsApi = [];
         var url = `${BASE_URL}${GAMES_URL}?key=${API_KEY}`;
         for (let i = 1; i <= 5; i++) {
@@ -225,17 +230,9 @@ const videogamesByName = async (req, res, next) => {
     }
 }
 
-const getPlatforms = async (req, res) => {
-    const { data: { results } } = await axios.get(`${BASE_URL}${PLATFORM_URL}?key=${API_KEY}`);
-    const platforms = await Promise.all(results.map(({ name }) => (name)));
-    res.json(platforms);
-    //return platforms;
-}
-
 module.exports = {
     getVideogames,
     createVideogame,
     getOneVideogame,
-    videogamesByName,
-    getPlatforms
+    videogamesByName
 }

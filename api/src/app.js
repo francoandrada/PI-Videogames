@@ -41,7 +41,6 @@ server.use((req, res, next) => {
 
 (async function getPlatforms() {
   const { data: { results } } = await axios.get(`${BASE_URL}${PLATFORM_URL}?key=${API_KEY}`);
-  //const platforms = await Promise.all(results.map(({ name }) => (name)));
   results.forEach(({ name }) => {
     Platform.create({
       name
