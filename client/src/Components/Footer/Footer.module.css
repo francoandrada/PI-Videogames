@@ -1,0 +1,25 @@
+.container {
+  width: 100%;
+  color: #FF4747;
+  display: flex;
+  text-align: center;
+  flex-direction: column;
+  align-items: center;
+  height: 7rem;
+  background-color: #010432;
+  justify-content: center;
+  position: sticky;
+  bottom: 0px;
+  top: 100%;
+}
+
+.containerGit {
+  width: 3rem;
+  height: 3rem;
+}
+
+.gitLink {
+  text-decoration: none;
+  color: #FF4747;
+  font-size: 25px;
+}
