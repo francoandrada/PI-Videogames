@@ -1,0 +1,33 @@
+.container {
+
+}
+
+.containerForm {
+
+}
+
+.input {
+  width: 80%;
+  outline: none;
+    /* outline: #FF4747 solid 1px; */
+  border: 1px solid;
+  height: 1.9em;
+  /* background-color: rgb(251, 251, 251); */
+  background-color: rgba(255, 255, 255, 0.109);
+  color: white;
+}
+
+.input:focus {
+  /* border: 0.2px solid; */
+  /* border-color:#FF4747 ; */
+  border: #FF4747 2px solid;
+}
+
+::placeholder { color: rgba(114, 113, 113, 0.733); padding-left: 5px; }
+
+#search {
+  width: 15%;
+  height: 2.2em;
+  margin-left: 0em;
+  cursor: pointer;
+}

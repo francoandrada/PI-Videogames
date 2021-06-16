@@ -198,7 +198,7 @@ const videogamesByName = async (req, res, next) => {
         //    background_image: data.background_image,
         //    genres: data.genres.map(({ name }) => (name)),
         //    }
-        var apiFiltred = resultsApi.filter(game => game.name.includes(nombre))
+        var apiFiltred = resultsApi.filter(game => game.name.toLowerCase().includes(nombre.toLowerCase()))
         const videogame = await Videogame.findAll({
             attributes: ['name', 'description'],
             where: { name: { [Op.iLike]: `%${nombre}%` } },

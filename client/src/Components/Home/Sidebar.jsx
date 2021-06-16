@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { getAllGenres } from '../../Redux/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './Sidebar.module.css'
+import SearchBar from './SearchBar';
+
 
 function Sidebar() {
   const dispatch = useDispatch();
@@ -12,6 +14,9 @@ function Sidebar() {
 
   return (
     <div className={styles.container}>
+      <div className={styles.search}>
+      <SearchBar/>
+      </div>
       <nav className={styles.navContainer}>
         <p>BROWSE BY</p>
         <div className={styles.browse}>
