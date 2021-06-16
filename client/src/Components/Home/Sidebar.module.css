@@ -1,0 +1,59 @@
+p {
+  color: gainsboro;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  text-decoration: none;
+}
+.container{
+  float: left;
+
+  width: 20%;
+  height: 100vh;
+  background-color:transparent;
+  top: 0;
+  left: 0;  
+  color: gainsboro;
+  padding: 0.5rem 1.5rem 2rem ;
+}
+
+.navContainer {
+  margin: 0;
+  padding: 0;
+}
+
+
+.navContainer ul {
+  list-style: none;
+}
+
+.browse {
+  padding-left: 1em;
+}
+
+.sort{
+  display: flex;
+  padding-left: 1em;
+  flex-direction: column;
+}
+
+.hover {
+  display: inline-flex;
+}
+
+.hover :hover{
+  color: #FF4747;
+  cursor: pointer;
+}
+
+.sort .hover:hover {
+  color: #FF4747;
+}

@@ -39,5 +39,8 @@
 
 .noFooter {
   min-height: 100vh;
-
+  background-color: #0D1042;
 }
+/* .noFooter a:link{
+  text-decoration: none!important;
+} */

@@ -1,0 +1,57 @@
+/* .homeContainer {
+  margin-top: 20px;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+} */
+.homeContainer {
+  padding-top: 1px;
+  padding-bottom: 1px;
+  overflow: hidden;
+}
+
+.cardsContainer {
+  float: left;
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 3em;
+  margin-bottom: 3em;
+  text-decoration: none;
+  grid-gap: 30px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  color: white;
+}
+
+Link {
+  text-decoration: none;
+}
+
+.pages {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 4em;
+}
+
+.pages button {
+  margin-inline-end: 25px;
+  background-color: transparent;
+  border: 2px solid;
+  border-color: white;
+  color: white;
+  border-radius: 100%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+.pages button:hover {
+  border-color: #FF4747;
+  
+}
+.pages button:focus {
+  border-color: #FF4747;
+  
+}

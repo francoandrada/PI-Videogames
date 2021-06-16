@@ -4,8 +4,8 @@ const { getVideogames, createVideogame, getOneVideogame, videogamesByName} = req
 const router = Router();
 
 
-//videogames/busqueda
-router.get('/busqueda', videogamesByName);
+//videogames/byName
+router.get('/byName', videogamesByName);
 
 // /videogames
 router.get('/', getVideogames);
