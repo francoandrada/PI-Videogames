@@ -30,7 +30,7 @@ function SearchBar() {
   }
   return (
     <div  className={styles.container}>
-      <div className={styles.containerForm}>
+      <div >
         <form action="" onSubmit={(e) => handleSubmit(e)}>
           <input value={input} className={styles.input} type="text" placeholder="Introduce a game" onChange={(e) => handleChange(e)}/>
           <button id={styles.search} type='submit'> <BsSearch/></button>

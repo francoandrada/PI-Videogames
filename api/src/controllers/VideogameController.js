@@ -11,7 +11,6 @@ const Op = Sequelize.Op;
 const getVideogames = async (req, res, next) => {
     const page = req.query.page
     try {
-
         if (page < 2 || page == undefined) {
             var url = `${BASE_URL}${GAMES_URL}?key=${API_KEY}`;
         } else {

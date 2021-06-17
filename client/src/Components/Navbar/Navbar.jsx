@@ -9,7 +9,7 @@ function Navbar() {
     <div className={styles.navContainer}>
       <div>
         <Link to={'/'}>
-          <h1 className={styles.logo}>Videogames App</h1>
+          <h1 className={styles.logo}>Videogames App</h1> 
         </Link>
       </div>
     </div>
