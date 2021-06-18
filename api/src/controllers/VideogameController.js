@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const { Videogame, Genre, Platform } = require('../db');
-const { GAMES_URL, BASE_URL, PLATFORM_URL } = require('../../constants');
+const { GAMES_URL, BASE_URL } = require('../../constants');
 const { API_KEY } = process.env;
 const { v4: uuidv4 } = require('uuid');
 const axios = require('axios');
@@ -229,9 +229,83 @@ const videogamesByName = async (req, res, next) => {
     }
 }
 
+
+const videogamesByGenre = async (req, res, next) => {
+    var genreName = req.query.genre;
+    
+    // if (!genreName) {
+    //     res.status(500).json({ messaje: "Name not entered"});
+    // }
+    try {
+        if (!genreName) {
+            return res.status(500).json({ messaje: "Name not entered"});
+        }
+
+        var resultsApi = [];
+        var url = `${BASE_URL}${GAMES_URL}?key=${API_KEY}`;
+        for (let i = 1; i <= 5; i++) {
+            if (i == 1) {
+                var { data: { results } } = await axios.get(url);
+            } else {
+                var { data: { results } } = await axios.get((url).concat(`&page=${i}`));
+            }
+            await Promise.all(
+                results.map((g) => {
+                    let data = {
+                        id: g.id,
+                        name: g.name,
+                        background_image: g.background_image,
+                        genres: g.genres.map(({ name }) => (name))
+                    }
+                    resultsApi.push(data)
+                })
+            )
+        }
+        //var { data } = await axios.get(url);
+        //var resultsApi = {
+        //    id: data.id,
+        //    name: data.name,
+        //    background_image: data.background_image,
+        //    genres: data.genres.map(({ name }) => (name)),
+        //    }
+        var apiFiltred = resultsApi.filter(game => game.genres.includes(genreName))
+        const videogame = await Videogame.findAll({
+            include: [{
+                model: Genre,
+                where: {
+                    name: genreName
+                  },
+                attributes: ['name']
+            }]
+        })
+
+        let videoJoin = [...apiFiltred, ...videogame];
+        if (videoJoin.length >= 1) {
+            let filtrado = videogame.length >= 15 ? videogame.slice(0, 15) : videogame;
+            res.json({
+                messaje: 'Video games found succesfully',
+                data: videoJoin
+            });
+        } else {
+            res.status(404).json({
+                messaje: 'Video games not found ',
+                data: {}
+            });
+        }
+
+    } catch (e) {
+        console.log(e);
+        res.status(500).json({
+            messaje: 'Something goes wrong',
+            data: {}
+        });
+    }
+}
+
 module.exports = {
     getVideogames,
     createVideogame,
     getOneVideogame,
-    videogamesByName
+    videogamesByName,
+    videogamesByGenre
 }

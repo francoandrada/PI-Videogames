@@ -57,3 +57,10 @@ a {
 .sort .hover:hover {
   color: #FF4747;
 }
+
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  -o-appearance: none;
+}

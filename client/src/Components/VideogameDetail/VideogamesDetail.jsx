@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import { FaArrowCircleLeft } from 'react-icons/fa'
 
 
-function Home() {
+function VideogameDetail() {
   const dispatch = useDispatch();
   const videogameDetail = useSelector(state => state.videogameDetail)
   const { id } = useParams()
@@ -95,4 +95,4 @@ function Home() {
   }
 }
 
-export default Home
+export default VideogameDetail
