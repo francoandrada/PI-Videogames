@@ -11,6 +11,9 @@ import styles from './VideogameCreate.module.css'
 // [ ] Posibilidad de seleccionar/agregar varias plataformas
 // [ ] Botón/Opción para crear un nuevo videojuego
 
+
+
+
 function VideogameCreate() {
 
   return (
@@ -23,16 +26,21 @@ function VideogameCreate() {
       <div className={styles.containerCreate}>
         <p className={styles.title}>Create a game</p>
         <form action="" >
-          <div className={styles.input_select}>
+          <div className={styles.input_textarea}>
             <div className={styles.inputContainer}>
               <div>
-                <input type="text" placeholder='Name: '/>
+                <input type="text" placeholder='Name: ' />
               </div>
               <div>
-                <input type="date" placeholder='Release date:'/>
+                <input type="date" placeholder='Release date:' />
               </div>
               <div>
-                <input type="number" placeholder='Rating:'/>
+                <input type="number" placeholder='Rating:' />
+              </div>
+            </div>
+            <div className={styles.textareaContainer}>
+              <div>
+                <textarea name="" id="" cols="30" rows="10" placeholder='Description: '></textarea>
               </div>
             </div>
             <div className={styles.selectContainer}>
@@ -42,12 +50,6 @@ function VideogameCreate() {
               <select name="" id="">
                 <option value="">Platforms</option>
               </select>
-            </div>
-          </div>
-          <div >
-            <label htmlFor="">Description: </label>
-            <div className={styles.textareaContainer}>
-              <textarea name="" id="" cols="30" rows="10"></textarea>
             </div>
           </div>
           <button>Create</button>
