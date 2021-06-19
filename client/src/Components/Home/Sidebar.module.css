@@ -43,6 +43,7 @@ a {
   display: flex;
   padding-left: 1em;
   flex-direction: column;
+  cursor: pointer;
 }
 
 .hover {

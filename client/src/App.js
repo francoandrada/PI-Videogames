@@ -6,6 +6,7 @@ import VideogameDetail from './Components/VideogameDetail/VideogamesDetail'
 import Navbar from './Components/Navbar/Navbar';
 import Footer from './Components/Footer/Footer';
 import Welcome from './Components/Welcome/Welcome';
+import VideogameCreate from './Components/VideogameCreate/VideogameCreate';
 
 function App() {
 
@@ -14,9 +15,10 @@ function App() {
 
       <div class="noFooter">
         <Route exact path="/" component={Welcome} class="noFooter"/>     
-        <Route path="/videogames" component={Navbar} />
+        <Route path="/" component={Navbar} />
         <Route exact path="/videogames" component={Home} class="noFooter"/>
         <Route exact path="/videogames/:id" component={VideogameDetail}/>
+        <Route exact path="/videogame/create" component={VideogameCreate}/>
       </div>
         <Route path="/" component={Footer} />
 

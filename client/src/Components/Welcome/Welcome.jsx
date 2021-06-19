@@ -19,10 +19,12 @@ function Welcome() {
             Lorem ipsum dolor sit, amet consectetur adipisicing elit. Numquam voluptates magni repellat ipsum error, dolorum dolore quos sunt itaque laboriosam fuga labore ipsam temporibus aliquid commodi autem animi voluptate delectus?
           </p>
         </div>
-        <div className={style.containerLink}>
-          <Link to='/videogames'>
-            <span id={style.link}> Lets goo! </span>
-          </Link>
+        <div >
+          <div className={style.containerLink}>
+            <Link to='/videogames'>
+              <span id={style.link}> Lets go! </span>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

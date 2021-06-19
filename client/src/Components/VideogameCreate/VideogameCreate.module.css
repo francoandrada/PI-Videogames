@@ -1,0 +1,75 @@
+.container {
+  overflow: hidden;
+}
+
+.containerCreate {
+  float: left;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 3em;
+  margin-bottom: 3em;
+  text-decoration: none;
+  color: #dcdcdc;
+  width: 970px;
+  min-height: 525px;
+  background-color: #010432b3;
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+}
+
+.side {
+  float: left;
+  padding: 0.5rem 1.5rem 2rem ;
+  width: 15%;
+  height: 80vh;
+}
+
+.icon{
+  width: 16%;
+  height: 100%;
+  cursor: pointer;
+  padding: 1.5em 0em 0em 2em;
+ 
+}
+
+.iconContainter {
+  position: fixed;
+  width: 16%;
+}
+
+.icon:hover {
+  width: 17%;
+}
+
+.input_select{
+  overflow: hidden;
+  margin-top: 3em;
+  margin-bottom: 3em;
+}
+
+.inputContainer {
+  float: left;
+  width: 50%;
+}
+
+.inputContainer div{
+  padding: 0px 0px 5px 40px;
+}
+
+.inputContainer input{
+  width: 85%;
+}
+
+.selectContainer{
+  float: left;
+  width: 50%;
+}
+
+.textareaContainer {
+  padding-left: 40px;
+}
+
+.title {
+  font-size: 30px;
+   text-align: center;
+}
+

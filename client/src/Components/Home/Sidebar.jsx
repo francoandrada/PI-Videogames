@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getAllGenres, getVideogamesByGenre } from '../../Redux/actions';
+import { getAllGenres, getVideogamesByGenre, getVideogamesByOrder } from '../../Redux/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './Sidebar.module.css'
 import SearchBar from './SearchBar';
@@ -11,22 +11,33 @@ function Sidebar() {
   const dispatch = useDispatch();
 
   const [filterGenre, setFilterGenre] = useState('');
-
+  const [sortBy, setSortBy] = useState('');
 
   useEffect(() => {
-    dispatch(getAllGenres())
+    dispatch(getAllGenres());
   }, [])
 
-
-
-  const handleChange = (event, name) => {
-    event.preventDefault();
-    setFilterGenre(name)
-    if (filterGenre) {
-      dispatch(getVideogamesByGenre(filterGenre))
+  useEffect(() => {
+    if (filterGenre.length > 0) {
+      dispatch(getVideogamesByGenre(filterGenre));
     }
+  }, [filterGenre])
+
+  useEffect(() => {
+    if (sortBy.length > 0) {
+      dispatch(getVideogamesByOrder(sortBy));
+    }
+  }, [sortBy])
+
+  const handleClickGenre = (event, name) => {
+    event.preventDefault();
+    setFilterGenre(name);
   }
 
+  const handleClickSort = (event, sortType) => {
+    event.preventDefault();
+    setSortBy(sortType);
+  }
 
   return (
     <div className={styles.container}>
@@ -43,7 +54,7 @@ function Sidebar() {
                 Array.isArray(genres.data) ?
                   genres.data.map(genre => (
                     <li key={genre.id} className={styles.hover}>
-                      <a value={genre.name} onClick={(e)=> handleChange(e, genre.name)}>{genre.name}</a> 
+                      <a onClick={(e) => handleClickGenre(e, genre.name)}>{genre.name}</a>
                     </li>
                   )) : <h1>Cargando..</h1>
               }
@@ -58,13 +69,17 @@ function Sidebar() {
         </div>
         <p >SORT BY</p>
         <div className={styles.sort}>
-          <p className={styles.hover}>A-Z</p>
-          <p className={styles.hover}>Z-A</p>
-          <p className={styles.hover}>Rating 1-10</p>
-          <p className={styles.hover}>Rating 10-1</p>
+          <a className={styles.hover} onClick={(e)=> handleClickSort(e, 'A-Z')}>A-Z</a>
+          <a className={styles.hover} onClick={(e)=> handleClickSort(e, 'Z-A')}>Z-A</a>
+          <a className={styles.hover} onClick={(e)=> handleClickSort(e, 'Highest Rating')}>Highest Rating</a>
+          <a className={styles.hover} onClick={(e)=> handleClickSort(e, 'Lower Rating')}>Lower Rating</a>
         </div>
       </nav>
     </div>
+
+
+
+
   )
 }
 

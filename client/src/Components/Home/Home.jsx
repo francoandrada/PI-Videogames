@@ -20,6 +20,13 @@ function Home() {
         <div>
             <div className={styles.homeContainer} >
                 <Sidebar />
+                <div>
+                    <NavLink to="/videogame/create">
+                        <p className={styles.addVideogame}>
+                            Create Videogame
+                        </p>
+                    </NavLink>
+                </div>
                 <div className={styles.cardsContainer}>
                     {
                         videogames && Array.isArray(videogames.data) ? videogames.data.map(game => (
@@ -38,13 +45,13 @@ function Home() {
 
                 </div>
             </div>
-                <div className={styles.pages}>
-                    <button id="pri" onClick={() => setPage(1)}>1</button>
-                    <button onClick={() => setPage(2)}>2</button>
-                    <button onClick={() => setPage(3)}>3</button>
-                    <button onClick={() => setPage(4)}>4</button>
-                    <button onClick={() => setPage(5)}>5</button>
-                </div>
+            <div className={styles.pages}>
+                <button id="pri" onClick={() => setPage(1)}>1</button>
+                <button onClick={() => setPage(2)}>2</button>
+                <button onClick={() => setPage(3)}>3</button>
+                <button onClick={() => setPage(4)}>4</button>
+                <button onClick={() => setPage(5)}>5</button>
+            </div>
         </div>
     )
 }

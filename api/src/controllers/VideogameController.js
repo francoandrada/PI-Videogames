@@ -62,7 +62,7 @@ const createVideogame = async (req, res, next) => {
 
     //var areGenres = genres.filter((genre) => genreName.includes(genre.name));
     try {
-        if (!name || !description || !rating || !genreName || !platformName ) {
+        if (!name || !description || !rating || !genreName || !platformName) {
             return res.status(500).json({
                 messaje: 'Some of the fields are empty'
             });
@@ -127,7 +127,7 @@ const getOneVideogame = async (req, res, next) => {
                 data: videogameDb
             });
         }
-        else if(!id.includes("-") && !!parseInt(id) && id.length < 7) {
+        else if (!id.includes("-") && !!parseInt(id) && id.length < 7) {
 
             var url = `${BASE_URL}${GAMES_URL}/${id}?key=${API_KEY}`;
             let { data } = await axios.get(url);
@@ -145,8 +145,8 @@ const getOneVideogame = async (req, res, next) => {
                 messaje: 'Videogame find succesfully',
                 data: videogameApi
             });
-        } else{
-            return res.status(500).json({messaje: 'Id not valid'})
+        } else {
+            return res.status(500).json({ messaje: 'Id not valid' })
         }
     } catch (e) {
         res.status(500).json({
@@ -161,13 +161,10 @@ const getOneVideogame = async (req, res, next) => {
 // Como buscar datos de los 100 juegos de la api sin que tarde 8 segundos
 const videogamesByName = async (req, res, next) => {
     var nombre = req.query.name;
-    
-    // if (!nombre) {
-    //     res.status(500).json({ messaje: "Name not entered"});
-    // }
+
     try {
         if (!nombre) {
-            return res.status(500).json({ messaje: "Name not entered"});
+            return res.status(500).json({ messaje: "Name not entered" });
         }
 
         var resultsApi = [];
@@ -190,14 +187,9 @@ const videogamesByName = async (req, res, next) => {
                 })
             )
         }
-        //var { data } = await axios.get(url);
-        //var resultsApi = {
-        //    id: data.id,
-        //    name: data.name,
-        //    background_image: data.background_image,
-        //    genres: data.genres.map(({ name }) => (name)),
-        //    }
+
         var apiFiltred = resultsApi.filter(game => game.name.toLowerCase().includes(nombre.toLowerCase()))
+
         const videogame = await Videogame.findAll({
             attributes: ['name', 'description'],
             where: { name: { [Op.iLike]: `%${nombre}%` } },
@@ -206,6 +198,70 @@ const videogamesByName = async (req, res, next) => {
                 attributes: ['name']
             }]
         })
+
+        let videoJoin = [...apiFiltred, ...videogame];
+        if (videoJoin.length >= 1) {
+            let filtrado = videogame.length >= 15 ? videogame.slice(0, 15) : videogame;
+            res.json({
+                messaje: 'Video games found succesfully',
+                data: videoJoin
+            });
+        } else {
+            res.status(404).json({
+                messaje: 'Video games not found ',
+                data: {}
+            });
+        }
+    } catch (e) {
+        console.log(e);
+        res.status(500).json({
+            messaje: 'Something goes wrong',
+            data: {}
+        });
+    }
+}
+
+
+const videogamesByGenre = async (req, res, next) => {
+    var genreName = req.query.genre;
+
+    try {
+        if (!genreName) {
+            return res.status(500).json({ messaje: "Name not entered" });
+        }
+
+        var resultsApi = [];
+        var url = `${BASE_URL}${GAMES_URL}?key=${API_KEY}`;
+        for (let i = 1; i <= 5; i++) {
+            if (i == 1) {
+                var { data: { results } } = await axios.get(url);
+            } else {
+                var { data: { results } } = await axios.get((url).concat(`&page=${i}`));
+            }
+            await Promise.all(
+                results.map((g) => {
+                    let data = {
+                        id: g.id,
+                        name: g.name,
+                        background_image: g.background_image,
+                        genres: g.genres.map(({ name }) => (name))
+                    }
+                    resultsApi.push(data)
+                })
+            )
+        }
+
+        var apiFiltred = resultsApi.filter(game => game.genres.includes(genreName))
+        const videogame = await Videogame.findAll({
+            include: [{
+                model: Genre,
+                where: {
+                    name: genreName
+                },
+                attributes: ['name']
+            }]
+        })
+
         let videoJoin = [...apiFiltred, ...videogame];
         if (videoJoin.length >= 1) {
             let filtrado = videogame.length >= 15 ? videogame.slice(0, 15) : videogame;
@@ -229,16 +285,12 @@ const videogamesByName = async (req, res, next) => {
     }
 }
 
+const sortVideogames = async (req, res, next) => {
+    var sortType = req.query.sortBy;
 
-const videogamesByGenre = async (req, res, next) => {
-    var genreName = req.query.genre;
-    
-    // if (!genreName) {
-    //     res.status(500).json({ messaje: "Name not entered"});
-    // }
     try {
-        if (!genreName) {
-            return res.status(500).json({ messaje: "Name not entered"});
+        if (!sortType) {
+            return res.status(500).json({ messaje: "Sort type not entered" });
         }
 
         var resultsApi = [];
@@ -254,6 +306,7 @@ const videogamesByGenre = async (req, res, next) => {
                     let data = {
                         id: g.id,
                         name: g.name,
+                        rating: g.rating,
                         background_image: g.background_image,
                         genres: g.genres.map(({ name }) => (name))
                     }
@@ -261,23 +314,101 @@ const videogamesByGenre = async (req, res, next) => {
                 })
             )
         }
-        //var { data } = await axios.get(url);
-        //var resultsApi = {
-        //    id: data.id,
-        //    name: data.name,
-        //    background_image: data.background_image,
-        //    genres: data.genres.map(({ name }) => (name)),
-        //    }
-        var apiFiltred = resultsApi.filter(game => game.genres.includes(genreName))
-        const videogame = await Videogame.findAll({
-            include: [{
-                model: Genre,
-                where: {
-                    name: genreName
-                  },
-                attributes: ['name']
-            }]
-        })
+
+//Consultar como hacer que compareAsc o Desc reciban un tercer parametro para cambiear name por key
+//y no tener que volver a repetir codigo
+        if (sortType === 'A-Z') {
+            function compareAscAz(a, b) {
+
+                const nameA = a.name.toLowerCase();
+                const nameB = b.name.toLowerCase();
+                if (nameA < nameB) {
+                    return -1;
+                }
+
+                if (nameA > nameB) {
+                    return 1;
+                }
+
+                return 0
+            }
+
+            var videogame = await Videogame.findAll({
+                order: [
+                    ['name', 'ASC']
+                ],
+                include: [{
+                    model: Genre,
+                    attributes: ['name']
+                }]
+            })
+
+
+            var apiFiltred = resultsApi.sort(compareAscAz);
+
+        } else if (sortType === 'Z-A') {
+            function compareDescZa(a, b) {
+                const nameA = a.name.toLowerCase();
+                const nameB = b.name.toLowerCase();
+                if (nameA < nameB) {
+                    return 1;
+                }
+
+                if (nameA > nameB) {
+                    return -1;
+                }
+
+                return 0
+            }
+
+            var videogame = await Videogame.findAll({
+                order: [
+                    ['name', 'DESC']
+                ],
+                include: [{
+                    model: Genre,
+                    attributes: ['name']
+                }]
+            })
+
+            var apiFiltred = resultsApi.sort(compareDescZa);
+
+        } else if (sortType === 'Highest Rating') {
+            function compareDescRating(a, b) {
+                return b.rating - a.rating
+            }
+
+            var videogame = await Videogame.findAll({
+                order: [
+                    ['rating', 'DESC']
+                ],
+                include: [{
+                    model: Genre,
+                    attributes: ['name']
+                }]
+            })
+
+            var apiFiltred = resultsApi.sort(compareDescRating);
+
+        } else if (sortType === 'Lower Rating') {
+            function compareAscRating(a, b) {
+                return a.rating - b.rating
+            }
+
+            var videogame = await Videogame.findAll({
+                order: [
+                    ['rating', 'ASC']
+                ],
+                include: [{
+                    model: Genre,
+                    attributes: ['name']
+                }]
+            })
+
+            var apiFiltred = resultsApi.sort(compareAscRating);
+        } else {
+            return res.status(500).json({ messaje: 'SortType not valid' })
+        }
 
         let videoJoin = [...apiFiltred, ...videogame];
         if (videoJoin.length >= 1) {
@@ -307,5 +438,6 @@ module.exports = {
     createVideogame,
     getOneVideogame,
     videogamesByName,
-    videogamesByGenre
+    videogamesByGenre,
+    sortVideogames
 }

@@ -38,19 +38,25 @@
   border: 0.1px solid;
   outline: none;
   cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 #link {
-  width: 100%;
+  /* width: 100%;
   height: 100%;
-  text-decoration: none;
+  text-decoration: none; */
   color: white;
   background-color: transparent;
 }
 
-.containerLink :hover {
-  padding: 2px;
+.containerLink a:hover {
+  font-size: 20px;
+  transition: 100ms;
+}
+
+.containerLink a {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

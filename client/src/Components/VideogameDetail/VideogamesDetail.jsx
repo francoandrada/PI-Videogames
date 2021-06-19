@@ -41,14 +41,6 @@ function VideogameDetail() {
     )
   } else {
 
-    //     [ ] Los campos mostrados en la ruta principal para cada videojuegos (imagen, nombre, y géneros)
-    // [ ] Descripción
-    // [ ] Fecha de lanzamiento
-    // [ ] Rating
-    // [ ] Plataformas
-
-    
-
     return (
       <div className={styles.container}>
         <Link to='/videogames'>
