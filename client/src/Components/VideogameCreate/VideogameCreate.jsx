@@ -1,6 +1,9 @@
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'
 import { FaArrowCircleLeft } from 'react-icons/fa'
 import styles from './VideogameCreate.module.css'
+import { useDispatch, useSelector } from 'react-redux'
+import { getAllGenres, getAllPlatforms } from '../../Redux/actions';
+import { useEffect, useState } from 'react';
 
 // [ ] Un formulario controlado con los siguientes campos
 // Nombre
@@ -12,9 +15,93 @@ import styles from './VideogameCreate.module.css'
 // [ ] Botón/Opción para crear un nuevo videojuego
 
 
+// const platforms = useSelector(state => state.platforms);
 
 
 function VideogameCreate() {
+
+  const dispatch = useDispatch();
+  const platformState = useSelector(state => state.platforms);
+  let genreState = useSelector(state => state.genres);
+
+  useEffect(() => {
+    dispatch(getAllPlatforms());
+  }, [])
+
+  useEffect(() => {
+    dispatch(getAllGenres());
+  }, [])
+
+
+  let genresWithCheck = Array.isArray(genreState.data) ? genreState.data.map(genre => ({checked: false, name: genre.name, id: genre.id})) : genreState
+  
+  const [genres, setGenres] = useState(genresWithCheck)
+
+
+  let platformsWithCheck = Array.isArray(platformState.data) ? platformState.data.map(platform => ({checked: false, name: platform.name, id: platform.id})) : platformState
+  
+  const [platforms, setPlatforms] = useState(platformsWithCheck)
+  
+  const [game, setGame] = useState({
+    name: '',
+    description: '',
+    rating: 0,
+    released: '',
+    genreName: null,
+    platformName: null
+
+  })
+  const handleClickGenre = (e) => {
+    setGenres(genres.map(genre => {
+      if (genre.name === e.currentTarget.name) {
+        genre.checked = !genre.checked;
+      }
+      return genre
+    }))
+    let genreschecked = genres.filter(genre => genre.checked).map(genre => genre.name);
+
+    setGame({
+      ...game,
+      ['genreName']: genreschecked
+    })
+  }
+  
+
+  const handleClickPlatform = (e) => {
+    setPlatforms(platforms.map((platform) => {
+      if (platform.name === e.currentTarget.name) {
+        platform.checked = !platform.checked;
+      }
+      return platform
+    }))  
+    let platformschecked = platforms.filter(platform => platform.checked).map(platform => platform.name);
+    
+    setGame({
+      ...game,
+      ['platformName']: platformschecked
+    })
+  }
+
+ 
+  const handleChange = (e) => {
+    setGame({
+      ...game,
+      [e.target.name] : e.target.value
+    })
+  }
+  console.log(game);
+  
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!game.name) {
+      return alert('Please, enter a name')
+    }
+    if (!game.description) {
+      return alert('Please, enter a description')
+    }
+  }
+
+
 
   return (
     <div className={styles.container}>
@@ -25,34 +112,58 @@ function VideogameCreate() {
       </Link>
       <div className={styles.containerCreate}>
         <p className={styles.title}>Create a game</p>
-        <form action="" >
+        <form action="" onSubmit={(e) => handleSubmit(e)}>
           <div className={styles.input_textarea}>
             <div className={styles.inputContainer}>
               <div>
-                <input type="text" placeholder='Name: ' />
+                <input name='name' onChange={(e) => handleChange(e)} value={game.name} type="text" placeholder='Name: ' />
               </div>
               <div>
-                <input type="date" placeholder='Release date:' />
+                <input name='released' onChange={(e) => handleChange(e)} value={game.released} type="date" placeholder='Release date:' />
               </div>
               <div>
-                <input type="number" placeholder='Rating:' />
+                <input name='rating' onChange={(e) => handleChange(e)} value={game.rating} type="number" placeholder='Rating:' />
               </div>
             </div>
             <div className={styles.textareaContainer}>
               <div>
-                <textarea name="" id="" cols="30" rows="10" placeholder='Description: '></textarea>
+                <textarea name='description' onChange={(e) => handleChange(e)} value={game.description} id="" cols="30" rows="10" placeholder='Description: '></textarea>
               </div>
             </div>
+            <div className={styles.subtitle}>
+              <p>Select platforms</p>
+              <hr />
+            </div>
             <div className={styles.selectContainer}>
-              <select name="" id="">
-                <option value="">Genres</option>
-              </select>
-              <select name="" id="">
-                <option value="">Platforms</option>
-              </select>
+              {
+                Array.isArray(platforms) ?
+                  platforms.map(p => (
+                    <div key={p.id}>
+                      <input type="checkbox" name={p.name} id="" onClick={handleClickPlatform}/>
+                      <label >{p.name}</label>
+                    </div>
+                  )) : <h1>Cargando..</h1>
+              }
+            </div>
+            <div className={styles.subtitle}>
+              <p>Select genres</p>
+              <hr />
+            </div>
+            <div className={styles.selectContainer}>
+              {
+                Array.isArray(genresWithCheck) ?
+                  genresWithCheck.map(g => (
+                    <div key={g.id}>
+                      <input name={g.name} type="checkbox"  id="" onClick={handleClickGenre} />
+                      <label >{g.name}</label>
+                    </div>
+                  )) : <h1>Cargando..</h1>
+              }
             </div>
           </div>
-          <button>Create</button>
+          <div className={styles.buttonContainer}>
+            <button type='submit'>Create</button>
+          </div>
         </form>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { SET_VIDEOGAMES, SET_VIDEOGAME_DETAIL, SET_GENRES, SET_VIDEOGAMES_NAME, SET_VIDEOGAMES_GENRE, SET_VIDEOGAMES_SORT } from './actionsNames';
+import { SET_VIDEOGAMES, SET_VIDEOGAME_DETAIL, SET_GENRES, SET_VIDEOGAMES_NAME, SET_VIDEOGAMES_GENRE, SET_VIDEOGAMES_SORT, SET_PLATFORMS } from './actionsNames';
 
 
 //dispatch es una funcion de la store de redux que sirve para enviar acciones
@@ -15,6 +15,14 @@ export function getAllGenres() {
     return (dispatch) => {
         axios.get('http://localhost:3001/genres').then(response => {
             dispatch({ type: SET_GENRES, payload: response.data })
+        })
+    }
+}
+
+export function getAllPlatforms() {
+    return (dispatch) => {
+        axios.get('http://localhost:3001/platforms').then(response => {
+            dispatch({ type: SET_PLATFORMS, payload: response.data })
         })
     }
 }

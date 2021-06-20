@@ -31,7 +31,7 @@ function Home() {
                     {
                         videogames && Array.isArray(videogames.data) ? videogames.data.map(game => (
                             <div key={game.id} className={styles.cardContainer}>
-                                <NavLink to={`/videogames/${game.id}`}>
+                                <NavLink key={game.id} to={`/videogames/${game.id}`}>
                                     <Card
                                         id={game.id}
                                         name={game.name}

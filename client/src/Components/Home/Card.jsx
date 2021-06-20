@@ -3,8 +3,8 @@ import styles from './Card.module.css'
 function Card(props) {
 
   return (
-    <div className={styles.container} >
-      <div className={styles.card}>
+    <div className={styles.container} key={props.id}>
+      <div className={styles.card} >
         <div className={styles.imageContainer}>
           <img className={styles.cardImage} src={props.image} />
         </div>

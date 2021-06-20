@@ -14,6 +14,9 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    released: {
+      type: DataTypes.DATE
+    },
     description: {
       type: DataTypes.TEXT,
       allowNull: false

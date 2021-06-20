@@ -3,7 +3,9 @@ const { Genre } = require('../db');
 
 const getGenres = async (req, res) => {
     try {
-        const genres  = await Genre.findAll();
+        const genres  = await Genre.findAll({
+            order: [['name', 'ASC']]
+        });
         if (genres) {
             res.json({
                 messaje: "Genres found successfully",

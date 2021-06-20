@@ -48,7 +48,7 @@ function VideogameDetail() {
             <p className={styles.iconContainter}>< FaArrowCircleLeft className={styles.icon}/></p>
           </div>
         </Link>
-        <div className={styles.containerDetail}>
+        <div className={styles.containerDetail} key={videogameDetail.data.id}>
           <div className={styles.detail}>
             <div className={styles.title}>
               <span>{videogameDetail.data.name}</span>
