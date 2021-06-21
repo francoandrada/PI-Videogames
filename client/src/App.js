@@ -7,6 +7,7 @@ import Navbar from './Components/Navbar/Navbar';
 import Footer from './Components/Footer/Footer';
 import Welcome from './Components/Welcome/Welcome';
 import VideogameCreate from './Components/VideogameCreate/VideogameCreate';
+import NotFound from './Components/NotFound/NotFound';
 
 function App() {
 
@@ -15,8 +16,9 @@ function App() {
 
       <div class="noFooter">
         <Route exact path="/" component={Welcome} class="noFooter"/>     
-        <Route path="/" component={Navbar} />
+        <Route path="/videogames" component={Navbar} />
         <Route exact path="/videogames" component={Home} class="noFooter"/>
+        <Route exact path="/videogames/notFound" component={NotFound}/>
         <Route exact path="/videogames/:id" component={VideogameDetail}/>
         <Route exact path="/videogame/create" component={VideogameCreate}/>
       </div>

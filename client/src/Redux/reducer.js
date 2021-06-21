@@ -1,7 +1,8 @@
 
-import { SET_VIDEOGAMES, SET_VIDEOGAME_DETAIL, SET_GENRES, SET_VIDEOGAMES_NAME, SET_VIDEOGAMES_GENRE, SET_VIDEOGAMES_SORT, SET_PLATFORMS} from './actionsNames';
+import { SET_VIDEOGAMES, SET_VIDEOGAME_DETAIL, SET_GENRES, SET_VIDEOGAMES_NAME, SET_VIDEOGAMES_GENRE, SET_VIDEOGAMES_SORT, SET_PLATFORMS, CREATE_VIDEOGAME} from './actionsNames';
 
 const initialState = {
+    videogamesCreate: null,
     videogames: undefined,
     videogameDetail: undefined,
     genres: [],
@@ -11,6 +12,12 @@ const initialState = {
 
 export default function rootReducer(state = initialState, action) {
     switch (action.type) {
+        case CREATE_VIDEOGAME: {
+            return {
+                ...state,
+                videogamesCreate: action.payload
+            }
+        }
         case SET_VIDEOGAMES: {
             return {
                 ...state,

@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const { Videogame, Genre, Platform } = require('../db');
+const { Videogame, Genre, Platform, genre_videogame } = require('../db');
 const { GAMES_URL, BASE_URL } = require('../../constants');
 const { API_KEY } = process.env;
 const { v4: uuidv4 } = require('uuid');
@@ -24,17 +24,39 @@ const getVideogames = async (req, res, next) => {
                     id: g.id,
                     name: g.name,
                     background_image: g.background_image,
-                    genres: g.genres.map(({ name }) => (name))
+                    // genres: g.genres.map(({ name }) => (name))
+                    genres: g.genres.map(genre => genre.name)
                 }
                 return data;
             })
         )
 
-        //let gamesCut = gamesList.slice(0, 1);
+        let gamesCut = games.slice(0, 15);
         let videogamesdb = await Videogame.findAll({
-            include: Genre
+            attributes: ['id', 'name'],
+            include: [{
+                model: Genre,
+                attributes: ['name']
+            }]
         });
-        let videoJoin = [...games, ...videogamesdb];
+
+        let videoGamesDB = videogamesdb.map((game) => {
+    
+            try {
+                let response = {
+                    id: game.dataValues.id,
+                    name: game.dataValues.name,
+                    genres: game.dataValues.genres.map(el => el.dataValues.name),
+                }
+                // console.log({ response });
+                return response
+            } catch (error) {
+                console.error(error)
+            }
+        })
+
+        let videoJoin = [...gamesCut, ...videoGamesDB];
+        console.log(videoJoin[videoJoin.length - 1].genres)
         videoJoin ?
             res.json({
                 messaje: "Videogames found successfully",
@@ -52,7 +74,7 @@ const getVideogames = async (req, res, next) => {
 }
 
 const createVideogame = async (req, res, next) => {
-    const { name, description, rating, genreName, platformName } = req.body;
+    const { name, description, released, rating, genreName, platformName } = req.body;
     const genres = await Genre.findAll({
         attributes: ['id', 'name']
     });
@@ -60,9 +82,11 @@ const createVideogame = async (req, res, next) => {
         attributes: ['id', 'name']
     });
 
+
+
     //var areGenres = genres.filter((genre) => genreName.includes(genre.name));
     try {
-        if (!name || !description || !rating || !genreName || !platformName) {
+        if (!name || !description || !rating || !released ||  !genreName || !platformName) {
             return res.status(500).json({
                 messaje: 'Some of the fields are empty'
             });
@@ -107,7 +131,7 @@ const getOneVideogame = async (req, res, next) => {
     try {
         if (id.includes("-")) {
             const videogameDb = await Videogame.findOne({
-                attributes: ['name', 'description', 'rating', ['createdAt', 'release_date']],
+                attributes: ['name', 'description', 'rating', 'released'],
                 where: {
                     id
                 },
@@ -122,9 +146,23 @@ const getOneVideogame = async (req, res, next) => {
                     }
                 ]
             })
+            
+   
+    
+
+            let videodb = {
+                name :videogameDb.dataValues.name,
+                description: videogameDb.dataValues.description,
+                rating: videogameDb.dataValues.rating,
+                genres: videogameDb.dataValues.genres.map(el => el.dataValues.name),
+                platforms: videogameDb.dataValues.platforms.map(el => el.dataValues.name),
+            }
+
+           
+        
             return res.json({
                 messaje: 'Videogame find succesfully',
-                data: videogameDb
+                data: videodb
             });
         }
         else if (!id.includes("-") && !!parseInt(id) && id.length < 7) {
@@ -157,8 +195,7 @@ const getOneVideogame = async (req, res, next) => {
     }
 }
 
-//Cambiar para que busque con minusculas
-// Como buscar datos de los 100 juegos de la api sin que tarde 8 segundos
+
 const videogamesByName = async (req, res, next) => {
     var nombre = req.query.name;
 
@@ -199,9 +236,11 @@ const videogamesByName = async (req, res, next) => {
             }]
         })
 
-        let videoJoin = [...apiFiltred, ...videogame];
+        let gamesCut = apiFiltred.slice(0, 15);
+
+        let videoJoin = [...gamesCut, ...videogame];
         if (videoJoin.length >= 1) {
-            let filtrado = videogame.length >= 15 ? videogame.slice(0, 15) : videogame;
+            //let filtrado = videojoin.length >= 15 ? videoJoin.slice(0, 15) : videoJoin;
             res.json({
                 messaje: 'Video games found succesfully',
                 data: videoJoin
@@ -315,8 +354,7 @@ const sortVideogames = async (req, res, next) => {
             )
         }
 
-//Consultar como hacer que compareAsc o Desc reciban un tercer parametro para cambiear name por key
-//y no tener que volver a repetir codigo
+
         if (sortType === 'A-Z') {
             function compareAscAz(a, b) {
 

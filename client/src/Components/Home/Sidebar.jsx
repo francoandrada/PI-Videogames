@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getAllGenres, getVideogamesByGenre, getVideogamesByOrder } from '../../Redux/actions';
+import { clearVideogames, getAllGenres, getVideogamesByGenre, getVideogamesByOrder } from '../../Redux/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './Sidebar.module.css'
 import SearchBar from './SearchBar';
@@ -18,19 +18,23 @@ function Sidebar() {
   }, [])
 
   useEffect(() => {
+
     if (filterGenre.length > 0) {
-      dispatch(getVideogamesByGenre(filterGenre));
+      dispatch(clearVideogames());
+      return () => {dispatch(getVideogamesByGenre(filterGenre));}
     }
   }, [filterGenre])
 
   useEffect(() => {
     if (sortBy.length > 0) {
-      dispatch(getVideogamesByOrder(sortBy));
+      dispatch(clearVideogames());
+      return () => {dispatch(getVideogamesByOrder(sortBy));}
     }
   }, [sortBy])
 
   const handleClickGenre = (event, name) => {
     event.preventDefault();
+    
     setFilterGenre(name);
   }
 
@@ -56,7 +60,7 @@ function Sidebar() {
                     <li key={genre.id} className={styles.hover}>
                       <a onClick={(e) => handleClickGenre(e, genre.name)}>{genre.name}</a>
                     </li>
-                  )) : <h1>Cargando..</h1>
+                  )) : <h1>Loading..</h1>
               }
             </ul>
 
@@ -65,7 +69,7 @@ function Sidebar() {
 
         </div>
         <div className={styles.browse}>
-          <p>RECENTLY ADDED</p>
+          {/* <p>RECENTLY ADDED</p> */}
         </div>
         <p >SORT BY</p>
         <div className={styles.sort}>

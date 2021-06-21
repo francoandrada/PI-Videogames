@@ -2,20 +2,9 @@ import { Link } from 'react-router-dom'
 import { FaArrowCircleLeft } from 'react-icons/fa'
 import styles from './VideogameCreate.module.css'
 import { useDispatch, useSelector } from 'react-redux'
-import { getAllGenres, getAllPlatforms } from '../../Redux/actions';
+import { createVideogame, getAllGenres, getAllPlatforms } from '../../Redux/actions';
 import { useEffect, useState } from 'react';
 
-// [ ] Un formulario controlado con los siguientes campos
-// Nombre
-// Descripción
-// Fecha de lanzamiento
-// Rating
-// [ ] Posibilidad de seleccionar/agregar varios géneros
-// [ ] Posibilidad de seleccionar/agregar varias plataformas
-// [ ] Botón/Opción para crear un nuevo videojuego
-
-
-// const platforms = useSelector(state => state.platforms);
 
 
 function VideogameCreate() {
@@ -23,6 +12,7 @@ function VideogameCreate() {
   const dispatch = useDispatch();
   const platformState = useSelector(state => state.platforms);
   let genreState = useSelector(state => state.genres);
+ 
 
   useEffect(() => {
     dispatch(getAllPlatforms());
@@ -99,6 +89,13 @@ function VideogameCreate() {
     if (!game.description) {
       return alert('Please, enter a description')
     }
+    if (!game.released) {
+      return alert('Please, enter a released')
+    }
+
+    dispatch(createVideogame(game));
+    alert('Videogame created successfully')
+    e.target.reset();
   }
 
 
@@ -122,7 +119,7 @@ function VideogameCreate() {
                 <input name='released' onChange={(e) => handleChange(e)} value={game.released} type="date" placeholder='Release date:' />
               </div>
               <div>
-                <input name='rating' onChange={(e) => handleChange(e)} value={game.rating} type="number" placeholder='Rating:' />
+                <input name='rating' onChange={(e) => handleChange(e)} value={game.rating} type="number" placeholder='Rating:' min="0" max="5"/>
               </div>
             </div>
             <div className={styles.textareaContainer}>
@@ -142,7 +139,7 @@ function VideogameCreate() {
                       <input type="checkbox" name={p.name} id="" onClick={handleClickPlatform}/>
                       <label >{p.name}</label>
                     </div>
-                  )) : <h1>Cargando..</h1>
+                  )) : <h1>Loading..</h1>
               }
             </div>
             <div className={styles.subtitle}>
@@ -157,12 +154,12 @@ function VideogameCreate() {
                       <input name={g.name} type="checkbox"  id="" onClick={handleClickGenre} />
                       <label >{g.name}</label>
                     </div>
-                  )) : <h1>Cargando..</h1>
+                  )) : <h1>Loading..</h1>
               }
             </div>
           </div>
           <div className={styles.buttonContainer}>
-            <button type='submit'>Create</button>
+            <button id={styles.btn} type='submit'>Create</button>
           </div>
         </form>
       </div>

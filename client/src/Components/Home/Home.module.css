@@ -49,14 +49,48 @@ Link {
 
 .pages button:hover {
   border-color: #FF4747;
-  
+
 }
 .pages button:focus {
   border-color: #FF4747;
-  
+
 }
 
 .addVideogame {
   margin: 0;
-  padding: 23px 0px 0px 0px;
+
 }
+
+.btnContainer {
+  padding: 23px 0px 0px 0px;
+
+}
+
+#link {
+  color: white;
+}
+
+#link:hover {
+  font-size: 16.5px;
+}
+
+
+
+/* 
+.btnCreate {
+  width: 288px;
+  height: 44px;
+  border-radius: 5px;
+  border-color: white !important;
+  border: 0.1px solid;
+  outline: none;
+  cursor: pointer;
+}
+
+.btnCreate a {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} */

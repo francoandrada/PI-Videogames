@@ -1,12 +1,32 @@
 import axios from 'axios';
-import { SET_VIDEOGAMES, SET_VIDEOGAME_DETAIL, SET_GENRES, SET_VIDEOGAMES_NAME, SET_VIDEOGAMES_GENRE, SET_VIDEOGAMES_SORT, SET_PLATFORMS } from './actionsNames';
+import { SET_VIDEOGAMES, SET_VIDEOGAME_DETAIL, SET_GENRES, SET_VIDEOGAMES_NAME, SET_VIDEOGAMES_GENRE, SET_VIDEOGAMES_SORT, SET_PLATFORMS, CREATE_VIDEOGAME } from './actionsNames';
 
 
 //dispatch es una funcion de la store de redux que sirve para enviar acciones
+// export function createVideogame(game) {
+//     return (dispatch) => {
+//         axios.post(`http://localhost:3001/videogames`, game).then(response => {
+//             dispatch({ type: CREATE_VIDEOGAME, payload: response.data })
+//         })
+//     }
+// }
+export function createVideogame(game) {
+    return (dispatch) => {
+        axios({
+            method: 'POST',
+            url: `http://localhost:3001/videogames`,
+            data: game 
+        }).then(response => {
+            dispatch({ type: CREATE_VIDEOGAME, payload: response.data })
+        })
+    }
+}
+
 export function getAllVideogames(page) {
     return (dispatch) => {
         axios.get(`http://localhost:3001/videogames?page=${page}`).then(response => {
             dispatch({ type: SET_VIDEOGAMES, payload: response.data })
+
         })
     }
 }
@@ -42,6 +62,10 @@ export function getVideogame(id) {
 
 export function clearVideogame() {
     return  { type: SET_VIDEOGAME_DETAIL, payload: undefined }
+}
+
+export function clearVideogames() {
+    return  { type: SET_VIDEOGAMES, payload: undefined }
 }
 
 export function getVideogamesByName(name) {

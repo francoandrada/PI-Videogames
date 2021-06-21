@@ -2,6 +2,12 @@ import styles from './Card.module.css'
 
 function Card(props) {
 
+  // Array.isArray(props.genres) ? props.genres.map(genre => (
+
+  //   <span>{genre} &nbsp; </span>
+
+  // )) : <p>It has no gender</p>
+
   return (
     <div className={styles.container} key={props.id}>
       <div className={styles.card} >
@@ -12,9 +18,8 @@ function Card(props) {
           <p className={styles.contentTitle}>{props.name}</p>
           {
             Array.isArray(props.genres) ? props.genres.map(genre => (
-              <span>{genre} &nbsp; </span>
-              
-            )) : <p>It has no gender</p>
+                <span>{genre} &nbsp; </span>
+              )) : <p>It has no gender</p>
           }
         </div>
       </div>

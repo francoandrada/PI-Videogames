@@ -1,0 +1,70 @@
+.container {
+  overflow: hidden;
+}
+
+.containerDetail {
+  float: left;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 3em;
+  margin-bottom: 3em;
+  text-decoration: none;
+  color: #dcdcdc;
+  width: 970px;
+  min-height: 270px;
+  background-color: #010432b3;
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+}
+
+.side {
+  float: left;
+  padding: 0.5rem 1.5rem 2rem ;
+  width: 15%;
+  height: 80vh;
+}
+
+
+
+/* .cardImage {
+  width: 100%;
+  display: block;
+  height: 100%;
+}
+
+
+.imageContainer {
+  width: 826px;
+  height: 463px;
+}
+
+.image {
+  display: flex;
+  justify-content: center;
+} */
+
+.title {
+ font-size: 30px;
+ padding: 1em 2em 1em 2em;
+  text-align: center;
+}
+
+.noDesc {
+  margin-block-end: 1em;
+}
+
+.icon{
+  width: 16%;
+  height: 100%;
+  cursor: pointer;
+  padding: 1.5em 0em 0em 2em;
+ 
+}
+
+.iconContainter {
+  position: fixed;
+  width: 16%;
+}
+
+.icon:hover {
+  width: 17%;
+}

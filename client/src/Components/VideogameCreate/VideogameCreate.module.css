@@ -120,3 +120,10 @@ hr {
   height: 3em;
   cursor: pointer;
 }
+
+.buttonContainer button:hover{
+  background-color: #FF4747;
+  transition: 250ms;
+  border-color: transparent;
+  font-size: 15px;
+}

@@ -16,7 +16,7 @@ function Welcome() {
         </div>
         <div className={style.description}>
           <p>
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Numquam voluptates magni repellat ipsum error, dolorum dolore quos sunt itaque laboriosam fuga labore ipsam temporibus aliquid commodi autem animi voluptate delectus?
+          Welcome to Videogames App, a web application where you can search for your favorite video games, filter by name, genre and more. You can also create yours through a controlled form with everything you need to have a complete video game. Sorry for my english, it's from google translator. 
           </p>
         </div>
         <div >
