@@ -133,8 +133,8 @@ function VideogameCreate() {
             </div>
             <div className={styles.selectContainer}>
               {
-                Array.isArray(platforms) ?
-                  platforms.map(p => (
+                Array.isArray(platformsWithCheck) ?
+                  platformsWithCheck.map(p => (
                     <div key={p.id}>
                       <input type="checkbox" name={p.name} id="" onClick={handleClickPlatform}/>
                       <label >{p.name}</label>

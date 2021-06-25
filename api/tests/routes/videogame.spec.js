@@ -20,11 +20,10 @@ describe('Videogame routes', () => {
     it('should get 200', () =>
       agent.get('/videogames').expect(200)
     );
-  },
-  describe('GET /videogames', () => {
+  });
+  describe('GET /genres', () => {
     it('should get 200', () =>
-      agent.get('/videogames').expect(200)
+      agent.get('/genres').expect(200)
     );
-  }
-  );
+  });
 });

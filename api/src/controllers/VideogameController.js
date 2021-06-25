@@ -56,7 +56,7 @@ const getVideogames = async (req, res, next) => {
         })
 
         let videoJoin = [...gamesCut, ...videoGamesDB];
-        console.log(videoJoin[videoJoin.length - 1].genres)
+        // console.log(videoJoin[videoJoin.length - 1].genres)
         videoJoin ?
             res.json({
                 messaje: "Videogames found successfully",
@@ -147,9 +147,6 @@ const getOneVideogame = async (req, res, next) => {
                 ]
             })
             
-   
-    
-
             let videodb = {
                 name :videogameDb.dataValues.name,
                 description: videogameDb.dataValues.description,
@@ -158,8 +155,6 @@ const getOneVideogame = async (req, res, next) => {
                 platforms: videogameDb.dataValues.platforms.map(el => el.dataValues.name),
             }
 
-           
-        
             return res.json({
                 messaje: 'Videogame find succesfully',
                 data: videodb
@@ -236,9 +231,27 @@ const videogamesByName = async (req, res, next) => {
             }]
         })
 
+        console.log(videogame)
+
+        let videoGamesDB = videogame.map((game) => {
+    
+            try {
+                let response = {
+                    id: game.dataValues.id,
+                    name: game.dataValues.name,
+                    genres: game.dataValues.genres.map(el => el.dataValues.name),
+                }
+                // console.log({ response });
+                return response
+            } catch (error) {
+                console.error(error)
+            }
+        })
+
+
         let gamesCut = apiFiltred.slice(0, 15);
 
-        let videoJoin = [...gamesCut, ...videogame];
+        let videoJoin = [...gamesCut, ...videoGamesDB];
         if (videoJoin.length >= 1) {
             //let filtrado = videojoin.length >= 15 ? videoJoin.slice(0, 15) : videoJoin;
             res.json({
