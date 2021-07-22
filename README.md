@@ -20,3 +20,22 @@ npm start
 - [ ] Redux
 - [ ] Express
 - [ ] Sequelize - Postgres
+
+🕺🕺🕺
+
+Construí este proyecto en junio de 2021 usando RAWG Api y todas las tecnologías que aprendí durante el bootcamp. Puede navegar a través de los juegos, filtrar por género, ordenar por calificación o buscar el juego que desee e incluso crear uno nuevo.
+
+## Para empezar 
+
+npm install  
+npm start
+
+
+#### Proyecto construido con
+
+- [ ] React
+- [ ] Redux
+- [ ] Express
+- [ ] Sequelize - Postgres
+
+
